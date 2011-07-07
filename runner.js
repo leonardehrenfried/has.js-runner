@@ -14,20 +14,20 @@ has.add=function(name, fn){
 };
 
 var runTests=function(){
-    var results=$("#results");
+    var output=$("#qunit-tests");
     
     $.each(tests, function(idx, testName){
         var result = has(testName);
-        var p=$("<p></p>").attr("id",testName);
+        var li=$("<li></li>").attr("id",testName);
         
-        var resultText = "unsupported";
+        var resultText = "fail";
         if (result){
-            resultText = "supported";
+            resultText = "pass";
         }
         
-        p.text(testName + ':' +resultText).addClass(resultText);
+        li.text(testName + ':' +resultText).addClass(resultText);
         
-        results.append(p);
+        output.append(li);
     });
 };
 
@@ -41,11 +41,14 @@ var scriptCallback=function(name){
     }
 };
 
-$.each(groups, function(index, value) {
-    var group = groups[index];
-    var uri=BASE_URI+group+'.js';
-    $.getScript(uri, function() {
-        scriptCallback(group);
+$(document).ready(function(){
+    $.each(groups, function(index, value) {
+        var group = groups[index];
+        var uri=BASE_URI+group+'.js';
+        $.getScript(uri, function() {
+            scriptCallback(group);
+        });
     });
-});
 
+    $("#qunit-userAgent").text(window.navigator.userAgent);
+});
